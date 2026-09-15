@@ -1,0 +1,38 @@
+name: RSS Automation
+
+on:
+  schedule:
+    - cron: "0 */3 * * *"   # Toutes les 3 heures
+  workflow_dispatch:
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install dependencies
+      run: |
+        pip install feedparser
+        pip install requests
+        pip install beautifulsoup4
+
+    - name: Run RSS script
+      run: python rss_multi_sites.py
+
+    - name: Commit CSV to repository
+      run: |
+        git config user.name "github-actions"
+        git config user.email "actions@github.com"
+        git add output/rss_history.csv
+        git commit -m "Update RSS CSV" || echo "No changes to commit"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
