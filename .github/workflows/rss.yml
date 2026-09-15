@@ -2,7 +2,7 @@ name: RSS Automation
 
 on:
   schedule:
-    - cron: "0 */2 * * *"   # Toutes les 3 heures
+    - cron: "0 */2 * * *"   # Toutes les 2 heures
   workflow_dispatch:
 
 jobs:
